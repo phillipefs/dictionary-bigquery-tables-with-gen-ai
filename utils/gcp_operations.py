@@ -22,3 +22,8 @@ class Gcp_Toolkit:
         df_sample = pd.read_gbq(QUERY)
         columns_str = ", ".join(list(df_sample.columns))
         return columns_str
+    
+    def get_sample_table_bigquery(self, dataset:str, table_name:str)->str:
+        QUERY = f"SELECT * FROM `{dataset}.{table_name}` LIMIT 10"
+        df_sample = pd.read_gbq(QUERY)        
+        return df_sample.to_string()
