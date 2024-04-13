@@ -1,6 +1,5 @@
 from utils.credentials import OPENAI_KEY, API_VERSION, OPENAI_ENDPOINT, MODEL_ENGINE
 from openai import AzureOpenAI
-import json
 
 
 class OpenaiGPT:
@@ -14,7 +13,7 @@ class OpenaiGPT:
     def _send_question_gpt(self, prompt:str):
         response = self.openai_client.completions.create(
         model=MODEL_ENGINE,
-        temperature=0.5,
+        temperature=1,
         max_tokens=2000,
         prompt= prompt
         )
