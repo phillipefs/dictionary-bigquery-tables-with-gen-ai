@@ -1,6 +1,6 @@
 
 import os
-from credentials import GCLOUD_PROJECT, GOOGLE_APPLICATION_CREDENTIALS
+from utils.credentials import GCLOUD_PROJECT, GOOGLE_APPLICATION_CREDENTIALS
 from google.cloud import storage, bigquery
 import pandas_gbq as pd
 
