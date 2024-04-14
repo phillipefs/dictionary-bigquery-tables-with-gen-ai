@@ -3,6 +3,7 @@ import os
 from utils.credentials import GCLOUD_PROJECT, GOOGLE_APPLICATION_CREDENTIALS
 from google.cloud import storage, bigquery
 import pandas_gbq as pd
+from pandas import DataFrame
 
 os.environ["GCLOUD_PROJECT"] = GCLOUD_PROJECT
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = GOOGLE_APPLICATION_CREDENTIALS
@@ -33,7 +34,7 @@ class GcpToolkit:
             print(f"Error in get_name_columns_table: {str(e)}")
             raise e
 
-    def get_sample_table_bigquery(self, dataset: str, table_name: str) -> str:
+    def get_sample_table_bigquery(self, dataset: str, table_name: str) -> DataFrame:
         """
         Get a sample of data from a BigQuery table.
 
@@ -47,7 +48,7 @@ class GcpToolkit:
         try:
             query = f"SELECT * FROM `{dataset}.{table_name}` LIMIT 10"
             df_sample = pd.read_gbq(query)        
-            return df_sample.to_string()
+            return df_sample
         except Exception as e:
             print(f"Error in get_sample_table_bigquery: {str(e)}")
             raise e
