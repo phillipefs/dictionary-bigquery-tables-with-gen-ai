@@ -1,6 +1,7 @@
 from utils.credentials import OPENAI_KEY, API_VERSION, OPENAI_ENDPOINT, MODEL_ENGINE
 from openai import AzureOpenAI
 from pandas import DataFrame
+import json
 
 
 class OpenaiGPT:
@@ -11,7 +12,7 @@ class OpenaiGPT:
     azure_endpoint = OPENAI_ENDPOINT
     )
 
-    def build_dictionary_prompt(dataframe: DataFrame, columns_name: str):
+    def build_dictionary_prompt(self, dataframe: DataFrame, columns_name: str):
         df = dataframe.to_string()
 
         prompt = f"""
@@ -33,11 +34,12 @@ class OpenaiGPT:
         """
         return prompt
 
-    def send_question_gpt(self, prompt:str):
+    def send_question_gpt(self, prompt:str)->json:
         response = self.openai_client.completions.create(
         model=MODEL_ENGINE,
         temperature=1,
         max_tokens=2000,
         prompt= prompt
         )
-        return response.choices[0].text
+        json_data = json.loads(response.choices[0].text)
+        return json.dumps(json_data, indent=4, ensure_ascii=False)
