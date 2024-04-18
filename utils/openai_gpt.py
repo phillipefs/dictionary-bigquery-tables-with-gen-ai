@@ -35,11 +35,20 @@ class OpenaiGPT:
         return prompt
 
     def send_question_gpt(self, prompt:str)->json:
-        response = self.openai_client.completions.create(
-        model=MODEL_ENGINE,
-        temperature=1,
-        max_tokens=2000,
-        prompt= prompt
+
+        response = self.openai_client.chat.completions.create(
+            model= MODEL_ENGINE, # model = "deployment_name".
+            messages=[
+                {"role": "system", "content": "Você Data Analyst expecialista em documentação e discionário de dados."},
+                {"role": "user", "content": prompt}
+            ]
         )
-        json_data = json.loads(response.choices[0].text)
+
+        response_txt = response.choices[0].message.content
+
+        start_json = response_txt.find("{")
+        end_json = response_txt.find("}")
+
+        json_data = json.loads(response_txt[start_json:end_json + 1])
+
         return json.dumps(json_data, indent=4, ensure_ascii=False)
