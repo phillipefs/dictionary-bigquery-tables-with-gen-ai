@@ -46,7 +46,7 @@ class GcpToolkit:
             str: A string representation of the sample data.
         """
         try:
-            query = f"SELECT * FROM `{dataset}.{table_name}` LIMIT 10"
+            query = f"SELECT * FROM `{dataset}.{table_name}` LIMIT 50"
             df_sample = pd.read_gbq(query)        
             return df_sample
         except Exception as e:
