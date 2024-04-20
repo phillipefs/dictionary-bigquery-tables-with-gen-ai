@@ -27,6 +27,7 @@ class GcpToolkit:
             str: A string representation of the sample data.
         """
         try:
+            print("Getting sample data...")
             query = f"SELECT * FROM `{dataset}.{table_name}` LIMIT {n_rows}"
             df_sample = pd.read_gbq(query)        
             return df_sample
@@ -74,6 +75,8 @@ class GcpToolkit:
 
             table.schema = new_schema
             client.update_table(table, ["schema"])
+
+            print("Table schema updated successfully")
 
         except Exception as e:
             raise Exception(f"An unexpected error occurred: {e}")
