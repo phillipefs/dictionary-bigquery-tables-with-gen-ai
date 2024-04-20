@@ -12,44 +12,25 @@ class OpenaiGPT:
     azure_endpoint = OPENAI_ENDPOINT
     )
 
-    def build_dictionary_prompt(self, dataframe: DataFrame, columns_name: str):
-        df = dataframe.to_string()
+    def build_dictionary_prompt(self, dataframe: DataFrame):
+
+        columns_str = ", ".join(list(dataframe.columns))
+        df_sample = dataframe.sample(n=20).to_string()
 
         prompt = f"""
-        You are tasked with documenting a BigQuery table for stakeholders. The table contains the following columns:
+        Objetivo: Sua tarefa é analisar os nomes das colunas e fornecer descrições para cada um delas. 
+        Por descrição, queremos um entendimento claro da finalidade ou função da coluna. Por favor, não inclua exemplos dos dados na coluna ou o tipo de dados que ela contém."
+        Colunas para documentar:      
 
-        {columns_name}
+        {columns_str}
 
-        Data sample:
-        {df}
-
-        Perform a thorough analysis of the column names and the provided sample, and create rich yet concise descriptions to help stakeholders understand the table's purpose.
-        The expected output is a JSON containing the name of each column and its corresponding description, as shown below:
-
-        {{
-            "Column_Name": "Description",
-            "Column_Name": "Description"
-            ...
-        }}
-        """
-        return prompt
-
-    def build_dictionary_prompt_1(self, dataframe: DataFrame, columns_name: str):
-        df = dataframe.to_string()
-
-        prompt = f"""
-        Objetivo: Sua tarefa é documentar as colunas de uma tabela no BigQuery para fornecer um entendimento claro para todos os stakeholders, focando unicamente no propósito ou função de cada coluna. 
-        Analise os nomes das colunas e gere descrições que transmitam o papel delas dentro da tabela. É importante evitar discutir o tipo de dado ou dar exemplos do conteúdo dos dados
-        Colunas para documentar:
-
-        {columns_name}
-
-        Exemplo das primeiras linhas da tabela:
-        {df}
+        Conteúdo da tabela:
+        {df_sample}
 
         Orientações:
-        - Foque no significado de cada coluna dentro do contexto da tabela e faça uma descrição completa.
-        - Exclua qualquer menção a tipos de dados ou exemplos específicos de dados.
+            1 - Analise a tabela, e classifique-a dentro de um contexto.
+            2 - Com o contexto definido, analise os dados e o nome da coluna, e crie descrição para cada coluna.
+            3 - Não exponha conteúdo da coluna na descrição, nem mesmo para exemplificar, também não é necessário expor data types dos dados.
 
         Resultado esperado:
 
@@ -61,15 +42,33 @@ class OpenaiGPT:
 
         """
         return prompt
+    
+    def build_data_quality_prompt(self, dataframe: DataFrame):
+        
+        df_sample = dataframe.sample(n=20).to_string()
 
-    def send_question_gpt(self, prompt:str)->json:
+        prompt = f"""
+        Objetivo: Melhorar a descrição da resposta anterior utilizando uma nova amostragem.
+        As duas regras abaixo são de extrema importância e devem ser respeitadas.
+
+        Regras Importantes:
+            1 - Não utilizar exemplos dos dados e nem informações sobre datatypes nas descrição das colunas. 
+            2 - Colunas com nome não amigáveis, entenda o contexto da tabela, e a amostra dos dados para criar a descrição.
+
+        Nova Amostragem:
+        {df_sample}
+        """
+        return prompt
+    
+    def send_question_gpt(self, prompt_dictionary:str, prompt_data_quality:str)->json:
 
         response = self.openai_client.chat.completions.create(
             model= MODEL_ENGINE, # model = "deployment_name".
             messages=[
                 {"role": "system", "content": "You are a Data Analyst specialized in data documentation and data dictionaries."},
-                {"role": "user", "content": prompt}
-            ]
+                {"role": "user", "content": prompt_dictionary},
+                {"role": "user", "content": prompt_data_quality}
+            ], 
         )
 
         response_txt = response.choices[0].message.content
