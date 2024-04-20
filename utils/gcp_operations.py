@@ -15,27 +15,7 @@ class GcpToolkit:
         self.storage_client = storage.Client()
         self.bigquery_client = bigquery.Client()
 
-    def get_name_columns_table(self, dataset: str, table_name: str) -> str:
-        """
-        Get names of columns in a BigQuery table.
-
-        Args:
-            dataset (str): The dataset ID.
-            table_name (str): The table name.
-
-        Returns:
-            str: A string containing column names separated by commas.
-        """
-        try:
-            query = f"SELECT * FROM `{dataset}.{table_name}` LIMIT 1"
-            df_sample = pd.read_gbq(query)
-            columns_str = ", ".join(list(df_sample.columns))
-            return columns_str
-        except Exception as e:
-            print(f"Error in get_name_columns_table: {str(e)}")
-            raise e
-
-    def get_sample_table_bigquery(self, dataset: str, table_name: str) -> DataFrame:
+    def get_sample_table_bigquery(self, dataset: str, table_name: str, n_rows: int = 1000) -> DataFrame:
         """
         Get a sample of data from a BigQuery table.
 
@@ -47,7 +27,7 @@ class GcpToolkit:
             str: A string representation of the sample data.
         """
         try:
-            query = f"SELECT * FROM `{dataset}.{table_name}` LIMIT 30"
+            query = f"SELECT * FROM `{dataset}.{table_name}` LIMIT {n_rows}"
             df_sample = pd.read_gbq(query)        
             return df_sample
         except Exception as e:
