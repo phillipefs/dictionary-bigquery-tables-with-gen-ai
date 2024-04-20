@@ -16,21 +16,49 @@ class OpenaiGPT:
         df = dataframe.to_string()
 
         prompt = f"""
-        Você está encarregado de documentar uma tabela no BigQuery para os stakeholders. A tabela possui as seguintes colunas:
+        You are tasked with documenting a BigQuery table for stakeholders. The table contains the following columns:
 
         {columns_name}
 
-        Exemplo dos dados:
+        Data sample:
         {df}
 
-        Faça uma analise profunda dos nome das colunas e do exemplo enviado, e crie descrições ricas porem objetivas, para auxiliar stackholders a entenderem o propósito da tabela. 
-        A saída esperada é um JSON contendo o nome de cada coluna e sua descrição correspondente, conforme exemplificado abaixo:
+        Perform a thorough analysis of the column names and the provided sample, and create rich yet concise descriptions to help stakeholders understand the table's purpose.
+        The expected output is a JSON containing the name of each column and its corresponding description, as shown below:
 
         {{
-            "Nome_da_Coluna": "Descrição",
-            "Nome_da_Coluna": "Descrição"
+            "Column_Name": "Description",
+            "Column_Name": "Description"
             ...
         }}
+        """
+        return prompt
+
+    def build_dictionary_prompt_1(self, dataframe: DataFrame, columns_name: str):
+        df = dataframe.to_string()
+
+        prompt = f"""
+        Objetivo: Sua tarefa é documentar as colunas de uma tabela no BigQuery para fornecer um entendimento claro para todos os stakeholders, focando unicamente no propósito ou função de cada coluna. 
+        Analise os nomes das colunas e gere descrições que transmitam o papel delas dentro da tabela. É importante evitar discutir o tipo de dado ou dar exemplos do conteúdo dos dados
+        Colunas para documentar:
+
+        {columns_name}
+
+        Exemplo das primeiras linhas da tabela:
+        {df}
+
+        Orientações:
+        - Foque no significado de cada coluna dentro do contexto da tabela e faça uma descrição completa.
+        - Exclua qualquer menção a tipos de dados ou exemplos específicos de dados.
+
+        Resultado esperado:
+
+        {{
+            "Column_Name": "Description",
+            "Column_Name": "Description"
+            ...
+        }}
+
         """
         return prompt
 
@@ -39,7 +67,7 @@ class OpenaiGPT:
         response = self.openai_client.chat.completions.create(
             model= MODEL_ENGINE, # model = "deployment_name".
             messages=[
-                {"role": "system", "content": "Você Data Analyst expecialista em documentação e discionário de dados."},
+                {"role": "system", "content": "You are a Data Analyst specialized in data documentation and data dictionaries."},
                 {"role": "user", "content": prompt}
             ]
         )
@@ -51,4 +79,4 @@ class OpenaiGPT:
 
         json_data = json.loads(response_txt[start_json:end_json + 1])
 
-        return json.dumps(json_data, indent=4, ensure_ascii=False)
+        return json_data
