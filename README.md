@@ -18,11 +18,15 @@
     model_engine   = "xxxxxxxxxxx"
     gcp_project_id = "xxxxxxxxxxx"
    ```
-3. Install requirements file
+3. Export Json Key Service Account GCP
+   ```
+   configs/service_account_key.json
+   ```
+4. Install requirements file
    ```
    pip install -r requirements.txt
    ```
-4. Run app
+5. Run app
    ```
    python .\app.py
    ```
