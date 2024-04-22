@@ -8,14 +8,12 @@ start_time = time.time()
 LIST_TABLES = [
     {
         "dataset_name":"REFINED",
-        "table_name":"SAMPLE",
+        "table_name":"FUEL_SAMPLE",
         "rows_sample": 20
     }
 ]
 
 if __name__ == "__main__":
-
-
         
     GCP_TOOLKIT = GcpToolkit()
     GPT = OpenaiGPT()
@@ -39,7 +37,6 @@ if __name__ == "__main__":
             prompt_dictionary= prompt_dictionary,
             prompt_data_quality= prompt_quality
         )
-
 
         GCP_TOOLKIT.execute_update_descriptions(
             dataset= table["dataset_name"],
