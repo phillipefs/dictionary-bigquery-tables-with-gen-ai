@@ -10,7 +10,7 @@
    ```
    git clone https://github.com/phillipefs/dictionary-bigquery-tables-with-gen-ai.git
    ```
-2. Create .env file
+2. Create folder configs and create .env file
    ```
     openai_key     = "xxxxxxxxxxx"
     api_version    = "xxxxxxxxxxx"
