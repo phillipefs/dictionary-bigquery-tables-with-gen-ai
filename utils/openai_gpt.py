@@ -49,11 +49,12 @@ class OpenaiGPT:
 
         prompt = f"""
         Objetivo: Melhorar a descrição da resposta anterior utilizando uma nova amostragem.
-        As duas regras abaixo são de extrema importância e devem ser respeitadas.
+        As três regras abaixo são de extrema importância e devem ser respeitadas.
 
         Regras Importantes:
             1 - Não utilizar exemplos dos dados e nem informações sobre datatypes nas descrição das colunas. 
             2 - Colunas com nome não amigáveis, entenda o contexto da tabela, e a amostra dos dados para criar a descrição.
+            3 - Não inserir exemplo do conteúdo da coluna na descrição.
 
         Nova Amostragem:
         {df_sample}
