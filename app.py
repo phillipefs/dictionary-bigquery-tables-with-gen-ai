@@ -5,32 +5,48 @@ import time
 
 start_time = time.time()
 
+LIST_TABLES = [
+    {
+        "dataset_name":"REFINED",
+        "table_name":"SAMPLE",
+        "rows_sample": 20
+    }
+]
 
 if __name__ == "__main__":
 
-    ########################## GCP ##########################
+
         
-    GCP_TOOLKIT = GcpToolkit()    
-    table_columns = GCP_TOOLKIT.get_name_columns_table(dataset="REFINED", 
-                                   table_name="SAMPLE")
-    sample_table = GCP_TOOLKIT.get_sample_table_bigquery(dataset="REFINED", 
-                                    table_name="SAMPLE")
-    
-
-    ########################## OPENAI ##########################
+    GCP_TOOLKIT = GcpToolkit()
     GPT = OpenaiGPT()
-    prompt = GPT.build_dictionary_prompt_1(
-        dataframe = sample_table,
-        columns_name = table_columns
-    )
 
-    dictionary_gpt = GPT.send_question_gpt(prompt=prompt)  
+    for table in LIST_TABLES:
 
-    GCP_TOOLKIT.execute_update_descriptions(table_name="SAMPLE", 
-                                            dataset="REFINED", json_descriptions=dictionary_gpt)
 
+        sample_table = GCP_TOOLKIT.get_sample_table_bigquery(
+            dataset= table["dataset_name"],
+            table_name= table["table_name"]
+        )
+
+        prompt_dictionary = GPT.build_dictionary_prompt(
+            dataframe= sample_table
+        )
+        prompt_quality = GPT.build_data_quality_prompt(
+            dataframe= sample_table
+        )
+
+        response_gpt = GPT.send_question_gpt(
+            prompt_dictionary= prompt_dictionary,
+            prompt_data_quality= prompt_quality
+        )
+
+
+        GCP_TOOLKIT.execute_update_descriptions(
+            dataset= table["dataset_name"],
+            table_name= table["table_name"],
+            json_descriptions= response_gpt
+        )     
 
     end_time = time.time()
     duration = (end_time - start_time) / 60
-
     print(f"Execution time: {duration} minutes")
