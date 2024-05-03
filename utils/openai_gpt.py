@@ -31,6 +31,7 @@ class OpenaiGPT:
             1 - Analise a tabela, e classifique-a dentro de um contexto.
             2 - Com o contexto definido, analise os dados e o nome da coluna, e crie uma **descrição completa** para cada coluna.
             3 - **Não exponha conteúdo da coluna na descrição**, nem mesmo para exemplificar, também não é necessário expor data types dos dados.
+            4 - **Retorne a descrição em inglês**
 
         Resultado esperado:
 
@@ -61,7 +62,7 @@ class OpenaiGPT:
         """
         return prompt
     
-    def send_question_gpt(self, prompt_dictionary: str, prompt_data_quality: str) -> dict:
+    def send_question_gpt(self, prompt_dictionary: str) -> dict:
         """
         Sends questions to GPT chat for generating responses.
 
@@ -79,8 +80,7 @@ class OpenaiGPT:
                 model=MODEL_ENGINE,
                 messages=[
                     {"role": "system", "content": "You are a Data Analyst specialized in data documentation and data dictionaries."},
-                    {"role": "user", "content": prompt_dictionary},
-                    #{"role": "user", "content": prompt_data_quality}
+                    {"role": "user", "content": prompt_dictionary}
                 ],
             )
 

@@ -29,13 +29,9 @@ if __name__ == "__main__":
         prompt_dictionary = GPT.build_dictionary_prompt(
             dataframe= sample_table
         )
-        prompt_quality = GPT.build_data_quality_prompt(
-            dataframe= sample_table
-        )
-
+        
         response_gpt = GPT.send_question_gpt(
-            prompt_dictionary= prompt_dictionary,
-            prompt_data_quality= prompt_quality
+            prompt_dictionary= prompt_dictionary
         )
 
         GCP_TOOLKIT.execute_update_descriptions(
