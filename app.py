@@ -34,6 +34,13 @@ if __name__ == "__main__":
             prompt_dictionary= prompt_dictionary
         )
 
+        GCP_TOOLKIT.upload_to_gcloud(
+            json_descriptions=response_gpt,
+            bucket_name="data-dictionary-bigquery",
+            dataset= table["dataset_name"],
+            table_name= table["table_name"]            
+        )
+
         GCP_TOOLKIT.execute_update_descriptions(
             dataset= table["dataset_name"],
             table_name= table["table_name"],
