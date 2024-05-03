@@ -1,5 +1,6 @@
 
 import os
+import json
 from utils.credentials import GCLOUD_PROJECT, GOOGLE_APPLICATION_CREDENTIALS
 from google.cloud import storage, bigquery
 from google.cloud.bigquery import SchemaField
@@ -77,6 +78,26 @@ class GcpToolkit:
             client.update_table(table, ["schema"])
 
             print("Table schema updated successfully")
+
+        except Exception as e:
+            raise Exception(f"An unexpected error occurred: {e}")
+        
+    def upload_to_gcloud(self, json_descriptions: dict, bucket_name:str, dataset:str, table_name:str)->None:
+        """
+        Upload Dict Descriptons to Storage
+        Args:
+            - data (dict): Dict with descriptions
+        Returns:
+            None
+        """          
+        try:
+            storage_client = storage.Client()
+            bucket = storage_client.get_bucket(bucket_name)
+            
+            path_file_bucket = dataset + '/' + table_name + '/' + table_name + '.json'
+            blob = bucket.blob(path_file_bucket)
+            blob.upload_from_string(json.dumps(json_descriptions), content_type="application/json")
+            print("Upload Descriptions to bucket...")
 
         except Exception as e:
             raise Exception(f"An unexpected error occurred: {e}")
