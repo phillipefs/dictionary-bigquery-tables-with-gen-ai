@@ -16,6 +16,7 @@ class GcpToolkit:
     def __init__(self):
         self.storage_client = storage.Client()
         self.bigquery_client = bigquery.Client()
+        self.secret_manager_client = secretmanager.SecretManagerServiceClient()
 
     def get_sample_table_bigquery(self, dataset: str, table_name: str, n_rows: int = 1000) -> DataFrame:
         """
@@ -53,7 +54,7 @@ class GcpToolkit:
 
         try:
      
-            client = bigquery.Client()
+            client = self.bigquery_client
             table_ref = client.dataset(dataset).table(table_name)
             table = client.get_table(table_ref)
 
@@ -103,7 +104,7 @@ class GcpToolkit:
         except Exception as e:
             raise Exception(f"An unexpected error occurred: {e}")
         
-    def access_secret_version(project_id: str, secret_id: str, version_id: str= "latest"
+    def access_secret_version(self, project_id: str, secret_id: str, version_id: str= "latest"
         ) -> secretmanager.AccessSecretVersionResponse:
         """
         Access the payload for the given secret version if one exists. The version
@@ -111,13 +112,13 @@ class GcpToolkit:
         """
 
         # Create the Secret Manager client.
-        client = secretmanager.SecretManagerServiceClient()
+        client_secret_manager = self.secret_manager_client
 
         # Build the resource name of the secret version.
         name = f"projects/{project_id}/secrets/{secret_id}/versions/{version_id}"
 
         # Access the secret version.
-        response = client.access_secret_version(request={"name": name})
+        response = client_secret_manager.access_secret_version(request={"name": name})
 
         # Verify payload checksum.
         crc32c = google_crc32c.Checksum()
