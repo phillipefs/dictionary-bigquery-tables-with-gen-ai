@@ -5,3 +5,10 @@ resource "google_storage_bucket" "static" {
 
  uniform_bucket_level_access = true
 }
+
+resource "google_storage_bucket" "c_function" {
+  name          = "c-functions"
+  location      = "us-central1"
+  storage_class = "STANDARD"
+  uniform_bucket_level_access = true
+}
