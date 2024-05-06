@@ -15,7 +15,7 @@ resource "google_storage_bucket_object" "zip" {
   ]
 }
 
-resource "google_cloudfunctions2_function" "function" {
+resource "google_cloudfunctions_function" "function" {
   name = "Cloud-function-trigger-using-terraform-gen-2"
   location = var.region
   description = "Cloud function gen2 trigger using terraform "
