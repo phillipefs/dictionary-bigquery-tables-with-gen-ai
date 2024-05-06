@@ -22,7 +22,7 @@ resource "google_cloudfunctions2_function" "function" {
 
   build_config {
     runtime     = "python39"
-    entry_point = "helloGET" 
+    entry_point = "hello_get" 
     environment_variables = {
       BUILD_CONFIG_TEST = "build_test"
     }
