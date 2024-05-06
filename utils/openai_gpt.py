@@ -12,10 +12,10 @@ class OpenaiGPT:
     azure_endpoint = OPENAI_ENDPOINT
     )
 
-    def build_dictionary_prompt(self, dataframe: DataFrame, n_rows: int = 30):
+    def build_dictionary_prompt(self, dataframe: DataFrame):
 
         columns_str = ", ".join(list(dataframe.columns))
-        df_sample = dataframe.sample(n=n_rows).to_string()
+        df_sample = dataframe.to_string()
 
         prompt = f"""
         Objetivo: Sua tarefa é analisar os nomes das colunas e fornecer descrições para cada um delas. 
@@ -44,9 +44,9 @@ class OpenaiGPT:
         """
         return prompt
     
-    def build_data_quality_prompt(self, dataframe: DataFrame, n_rows: int = 30):
+    def build_data_quality_prompt(self, dataframe: DataFrame):
         
-        df_sample = dataframe.sample(n=n_rows).to_string()
+        df_sample = dataframe.to_string()
 
         prompt = f"""
         Objetivo: Melhorar a descrição da resposta anterior utilizando uma nova amostragem.
