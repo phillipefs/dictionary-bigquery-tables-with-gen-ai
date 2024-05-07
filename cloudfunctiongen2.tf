@@ -44,17 +44,10 @@ resource "google_cloudfunctions2_function" "default" {
     }
     ingress_settings = "ALLOW_ALL"
     all_traffic_on_latest_revision = true
-    service_account_email = "datapipeline@datapipelines-419810.iam.gserviceaccount.com"
+    service_account_email = "83108678484-compute@developer.gserviceaccount.com"
   }
 
   depends_on = [
     google_storage_bucket_object.zip
   ]
-}
-
-resource "google_cloud_run_service_iam_member" "member" {
-  location = google_cloudfunctions2_function.default.location
-  service  = google_cloudfunctions2_function.default.name
-  role     = "roles/run.invoker"
-  member   = "allUsers"
 }
