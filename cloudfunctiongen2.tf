@@ -52,15 +52,6 @@ resource "google_cloudfunctions2_function" "default" {
   ]
 }
 
-data "google_iam_policy" "invoker" {
-  binding {
-    role = "roles/run.invoker"
-    members = [
-      "allUsers",
-    ]
-  }
-}
-
 resource "google_cloud_run_service_iam_binding" "default" {
   location = google_cloudfunctions2_function.default.location
   service  = google_cloudfunctions2_function.default.name
@@ -69,38 +60,3 @@ resource "google_cloud_run_service_iam_binding" "default" {
     "allUsers"
   ]
 }
-
-# data "google_iam_policy" "invoker" {
-#   binding {
-#     role = "roles/run.invoker"
-#     members = [
-#       "allUsers",
-#     ]
-#   }
-# }
-
-# resource "google_cloudfunctions2_function_iam_policy" "invoker" {
-#   location    = google_cloudfunctions2_function.default.location
-#   cloud_function = google_cloudfunctions2_function.default.name
-#   policy_data = data.google_iam_policy.invoker.policy_data
-# }
-
-# data "google_iam_policy" "admin" {
-#   binding {
-#     role = "roles/run.invoker"
-#     members = [
-#       "allUsers",
-#     ]
-#   }
-# }
-
-# resource "google_cloud_run_service_iam_policy" "policy" {
-#   location = google_cloudfunctions2_function.default.location
-#   project = "datapipelines-419810"
-#   service = google_cloudfunctions2_function.default.name
-#   policy_data = data.google_iam_policy.admin.policy_data
-
-#   depends_on = [
-#     google_cloudfunctions2_function.default
-#   ]
-# }
