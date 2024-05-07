@@ -16,7 +16,7 @@ resource "google_storage_bucket_object" "zip" {
 }
 
 resource "google_cloudfunctions2_function" "default" {
-  name = "data-dictionary-function"
+  name = "data-dictionary-bq"
   location = var.region
   description = "Data Dictionary with GenAI"
 
@@ -44,7 +44,7 @@ resource "google_cloudfunctions2_function" "default" {
     }
     ingress_settings = "ALLOW_ALL"
     all_traffic_on_latest_revision = true
-    service_account_email = "83108678484-compute@developer.gserviceaccount.com"
+    service_account_email = "datapipeline@datapipelines-419810.iam.gserviceaccount.com"
   }
 
   depends_on = [
