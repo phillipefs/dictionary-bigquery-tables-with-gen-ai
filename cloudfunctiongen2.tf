@@ -16,7 +16,7 @@ resource "google_storage_bucket_object" "zip" {
 }
 
 resource "google_cloudfunctions2_function" "default" {
-  name = "data-dictionary-bigquery"
+  name = "data-dictionary-bq"
   location = var.region
   description = "Data Dictionary with GenAI"
 
