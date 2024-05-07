@@ -16,7 +16,7 @@ resource "google_storage_bucket_object" "zip" {
 }
 
 resource "google_cloudfunctions2_function" "default" {
-  name = "data-dictionary-bq"
+  name = "data-dictionary-bigquery"
   location = var.region
   description = "Data Dictionary with GenAI"
 
@@ -61,10 +61,13 @@ data "google_iam_policy" "invoker" {
   }
 }
 
-resource "google_cloudfunctions2_function_iam_policy" "invoker" {
-  location    = google_cloudfunctions2_function.default.location
-  cloud_function = google_cloudfunctions2_function.default.name
-  policy_data = data.google_iam_policy.invoker.policy_data
+resource "google_cloud_run_service_iam_binding" "default" {
+  location = google_cloudfunctions2_function.default.location
+  service  = google_cloudfunctions2_function.default.name
+  role     = "roles/run.invoker"
+  members = [
+    "allUsers"
+  ]
 }
 
 # data "google_iam_policy" "invoker" {
