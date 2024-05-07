@@ -16,9 +16,9 @@ resource "google_storage_bucket_object" "zip" {
 }
 
 resource "google_cloudfunctions2_function" "function" {
-  name = "Cloud-function-trigger-using-terraform-gen-2"
+  name = "data-dictionary-function"
   location = var.region
-  description = "Cloud function gen2 trigger using terraform "
+  description = "Data Dictionary with GenAI"
 
   build_config {
     runtime     = "python39"
