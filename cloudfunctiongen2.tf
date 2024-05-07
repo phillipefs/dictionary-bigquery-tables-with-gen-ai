@@ -15,7 +15,7 @@ resource "google_storage_bucket_object" "zip" {
   ]
 }
 
-resource "google_cloudfunctions2_function" "dictionary" {
+resource "google_cloudfunctions2_function" "default" {
   name = "data-dictionary-function"
   location = var.region
   description = "Data Dictionary with GenAI"
@@ -53,8 +53,8 @@ resource "google_cloudfunctions2_function" "dictionary" {
 }
 
 resource "google_cloud_run_service_iam_member" "member" {
-  location = google_cloudfunctions2_function.dictionary.location
-  service  = google_cloudfunctions2_function.dictionary.name
+  location = google_cloudfunctions2_function.default.location
+  service  = google_cloudfunctions2_function.default.name
   role     = "roles/run.invoker"
   member   = "allUsers"
 }
