@@ -52,9 +52,22 @@ resource "google_cloudfunctions2_function" "default" {
   ]
 }
 
-resource "google_cloud_run_service_iam_member" "member" {
+data "google_iam_policy" "admin" {
+  binding {
+    role = "roles/run.invoker"
+    members = [
+      "allUsers",
+    ]
+  }
+}
+
+resource "google_cloud_run_service_iam_policy" "policy" {
   location = google_cloudfunctions2_function.default.location
-  service  = google_cloudfunctions2_function.default.name
-  role     = "roles/run.invoker"
-  member   = "allUsers"
+  project = "datapipelines-419810"
+  service = google_cloudfunctions2_function.default.name
+  policy_data = data.google_iam_policy.admin.policy_data
+
+  depends_on = [
+    google_cloudfunctions2_function.default
+  ]
 }
