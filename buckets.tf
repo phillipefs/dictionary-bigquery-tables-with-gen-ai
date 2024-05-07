@@ -12,3 +12,10 @@ resource "google_storage_bucket" "c_function" {
   storage_class = "STANDARD"
   uniform_bucket_level_access = true
 }
+
+resource "google_storage_bucket" "test" {
+  name          = "c-test-data-pipelines"
+  location      = "us-central1"
+  storage_class = "STANDARD"
+  uniform_bucket_level_access = true
+}
